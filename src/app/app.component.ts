@@ -4,7 +4,7 @@ import { CounterModule } from './counter/counter.module';
 
 const DYN_HTML = `
 <p>Custom loaded HTML with an angular component</p>
-<app-counter [start]="start" [step]="step"></app-counter>
+<app-counter [start]="50" [step]="10"></app-counter>
 `;
 
 @Component({
@@ -22,20 +22,16 @@ export class AppComponent implements OnInit {
 
   constructor(private compiler: Compiler) {}
 
-  ngOnInit() {
-    [this.dynamicComponent, this.dynamicModule] = this.createComponent(DYN_HTML);
+  async ngOnInit() {
+    [this.dynamicComponent, this.dynamicModule] = await this.createComponent(DYN_HTML);
   }
 
-  private createComponent(template: string) {
+  private async createComponent(template: string) {
     const metadata = {
       template: template,
     };
 
-    const cmpntCls = class DynamicComponent {
-      name = 'Counter';
-      start = 50;
-      step = 10;
-    };
+    const cmpntCls = class DynamicComponent {};
     const decoratedCmpntCls = Component(metadata)(cmpntCls);
 
     @NgModule({
@@ -44,7 +40,7 @@ export class AppComponent implements OnInit {
     })
     class RuntimeComponentModule {}
 
-    const targetMdl = this.compiler.compileModuleSync(RuntimeComponentModule);
+    const targetMdl = await this.compiler.compileModuleAsync(RuntimeComponentModule);
 
     return [decoratedCmpntCls, targetMdl];
   }
