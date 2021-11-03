@@ -1,27 +1,32 @@
-# NgssHtml
+# Angular SSR with Dynamic HTML
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.12.
+This repo demonstrates an issue that occurs when building a server side version of an angular project containing dynamically loaded components using the [@angular/core Compiler](https://angular.io/api/core/Compiler)
 
-## Development server
+## Steps to reproduce
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+1. clone this repo
+2. run: `npm run build:ssr`
 
-## Code scaffolding
+## Actual results
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+The build fails not recognizing Angular's classes, with errors:
 
-## Build
+- Value could not be determined statically.
+- Unable to evaluate this expression statically. (x3)
+- Unable to evaluate an invalid expression.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Notes
 
-## Running unit tests
+1. Normal builds run with no errors (`ng serve`)
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Why in the first place
 
-## Running end-to-end tests
+### _Short answer:_ WYSIWYG editor
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### _Long answer:_
 
-## Further help
+We need this so using a WYSIWYG editor, we can simply write a tag `[tag]` and transform it to a `<app-tag>` component
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Following the example in this repo, we can use `[counter start="2" step="2"]` to generate `<app-counter start="2" step="2"><app-counter>`
+
+We can use javascript to make interactive HTML instead of the angular component, but the access to most of the angular/typescript code (api, logging, npm packages, ...) will be hacky or require a js rewrite, so this solution seems cleaner
