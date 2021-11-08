@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ngss-html",
+            "outputPath": "dist/ngss-html/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -94,6 +94,16 @@
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.scss"],
             "scripts": []
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/ngss-html/server",
+            "main": "src/server.ts",
+            "tsConfig": "tsconfig.server.json",
+            "bundleDependencies": false,
+            "optimization": false
           }
         }
       }
